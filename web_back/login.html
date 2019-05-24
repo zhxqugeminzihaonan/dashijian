@@ -2,35 +2,88 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>大事件-后台登录页</title>
-    <link rel="stylesheet" type="text/css" href="css/reset.css">
-    <link rel="stylesheet" type="text/css" href="css/iconfont.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>我的大事件-后台登录页</title>
+  <link rel="stylesheet" type="text/css" href="css/reset.css">
+  <link rel="stylesheet" type="text/css" href="css/iconfont.css">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link rel="stylesheet" href="./js/bootstrap/css/bootstrap.min.css">
 </head>
 
 <body>
-    <div class="main_wrap">
-        <div class="header">
-            <a href="#" class="logo"><img src="images/logo.png" alt=""></a>
-            <div class="copyright">CopyRight © 2019 深圳百秀信息技术股份有限公司<br>All Rights Reserved</div>
+  <div class="main_wrap">
+    <div class="header">
+      <a href="#" class="logo"><img src="images/logo.png" alt=""></a>
+      <div class="copyright">CopyRight © 2019 深圳百秀信息技术股份有限公司<br>All Rights Reserved</div>
+    </div>
+
+    <div class="login_form_con">
+      <div class="login_title"></div>
+      <form class="login_form">
+        <i class="iconfont icon-user"></i>
+        <i class="iconfont icon-key"></i>
+        <input type="text" class="input_txt" placeholder="邮箱/手机号">
+        <input type="password" class="input_pass" placeholder="密码">
+        <input type="submit" class="input_sub" value="登 录">
+      </form>
+    </div>
+  </div>
+  <!-- 准备弹框的结构 -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel">提示框!!</h4>
         </div>
-
-        <div class="login_form_con">
-            <div class="login_title"></div>
-            <form class="login_form">
-                <i class="iconfont icon-user"></i>
-                <i class="iconfont icon-key"></i>
-                <input type="text" class="input_txt" placeholder="邮箱/手机号">
-                <input type="password" class="input_pass" placeholder="密码">
-                <input type="submit" class="input_sub" value="登 录">
-            </form>
+        <div class="modal-body my-modal-body"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            狠心关闭
+          </button>
+          <button type="button" class="btn btn-primary">残忍确认</button>
         </div>
-
-    </div> 
-
+      </div>
+    </div>
+  </div>
+  <!-- 弹框结构结束 -->
 </body>
 
 </html>
+<script src="./js/jquery-1.12.4.min.js"></script>
+<script src="./js/bootstrap/js/bootstrap.min.js"></script>
+<script>
+  $(function () {
+    $('.input_sub').click(function (e) {
+      e.preventDefault()
+      var txt = $('.input_txt').val().trim()
+      var password = $('.input_pass').val().trim()
+      if (txt == '' || password == '') {
+       $('my-modal-body').text('请输入正确的账号密码')
+        $('#myModal').modal()
+      }
+      $.ajax({
+        url: 'https://autumnfish.cn/big/admin/login',
+        type: 'post',
+        data: {
+          user_name: txt,
+          password: password
+        },
+        success: function (backData) {
+          // console.log(backData)
+          if (backData.code == 400) {
+            // alert('密码都记不住？？')
+            $('.my-modal-body').text('哥们，用户名或密码错了哦！')
+            $('#myModal').modal()
+          } else if (backData.code == 200) {
+            window.location.href = './index.html'
+          }
+        }
+      })
+    })
+  })
+</script>
